@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary:       #7B3F00;
+  --color-primary-hover: #6A3500;
+  --color-secondary:     #C4956A;
+  --color-gold:          #D4A853;
+  --color-cream:         #F5EFE6;
+  --color-cream-md:      #E8D5B7;
+  --color-footer-bg:     #2C1810;
+  --color-text:          #1A1A1A;
+  --color-text-muted:    #6B5B4E;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans bg-white;
+    color: var(--color-text);
+  }
+  h1, h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+@layer components {
+  /* Primary CTA — coklat solid */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-colors duration-200;
+    padding: 14px 28px;
+    background-color: var(--color-primary);
+    color: white;
+  }
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  /* Secondary CTA — outline coklat */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-colors duration-200;
+    padding: 14px 28px;
+    background: transparent;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+  }
+  .btn-outline:hover {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  /* Legacy — dipertahankan untuk backward compat */
+  .btn-brown {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 text-white font-semibold rounded-lg transition-colors duration-200;
+    background-color: var(--color-primary);
+  }
+  .btn-brown:hover { background-color: var(--color-primary-hover); }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-center;
+    color: var(--color-primary);
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+  .section-subtitle {
+    @apply text-center max-w-2xl mx-auto mt-3;
+    color: var(--color-text-muted);
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-200;
+    border: 1px solid var(--color-cream-md);
+  }
+  .card:hover {
+    @apply shadow-xl;
+    border-color: var(--color-primary);
+    transform: translateY(-4px);
+  }
+}
+
+/* Pulse animation — warna coklat/primary */
+@keyframes pulse-wa {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(123, 63, 0, 0.5); }
+  50%       { box-shadow: 0 0 0 14px rgba(123, 63, 0, 0); }
+}
+.animate-pulse-wa {
+  animation: pulse-wa 2s ease-in-out infinite;
+}
+
+/* Section divider */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--color-cream-md);
+  margin: 0;
+}
+
+/* Playfair untuk heading besar */
+.font-display {
+  font-family: 'Playfair Display', Georgia, serif;
+}
