@@ -3,15 +3,15 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingWA from '@/components/FloatingWA'
-import { SITE } from '@/lib/constants'
+import { siteConfig } from '@/lib/config'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${SITE.name} | Kusen Aluminium Lengkung Terpercaya Se-Indonesia`,
-    template: `%s | ${SITE.name}`,
+    default: `${siteConfig.name} | Kusen Aluminium Lengkung Terpercaya Se-Indonesia`,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: SITE.description,
+  description: siteConfig.description,
   keywords: [
     'kusen aluminium lengkung',
     'kusen lengkung custom',
@@ -24,16 +24,16 @@ export const metadata: Metadata = {
     'CV Toto Aluminium Manufacture',
     'toto aluminium',
   ],
-  authors: [{ name: SITE.name }],
-  creator: SITE.name,
-  publisher: SITE.name,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   openGraph: {
     type: 'website',
     locale: 'id_ID',
-    url: SITE.url,
-    siteName: SITE.name,
-    title: `${SITE.name} | Kusen Aluminium Lengkung Terpercaya`,
-    description: SITE.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} | Kusen Aluminium Lengkung Terpercaya`,
+    description: siteConfig.description,
     images: [
       {
         url: '/images/hero-all-products.jpg',
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE.name} | Kusen Aluminium Lengkung`,
-    description: SITE.description,
+    title: `${siteConfig.name} | Kusen Aluminium Lengkung`,
+    description: siteConfig.description,
     images: ['/images/hero-all-products.jpg'],
   },
   robots: {
@@ -55,11 +55,48 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true },
   },
   alternates: {
-    canonical: SITE.url,
+    canonical: siteConfig.url,
   },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    telephone: siteConfig.phone,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Jl. Rawa Mulya No.15 RT 002/001',
+      addressLocality: 'Mustika Jaya',
+      addressRegion: 'Jawa Barat',
+      postalCode: '17158',
+      addressCountry: 'ID',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: -6.2797,
+      longitude: 107.0086,
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        opens: '08:00',
+        closes: '17:00',
+      },
+    ],
+    image: `${siteConfig.url}/images/hero-all-products.jpg`,
+    priceRange: '$$',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '127',
+    },
+  }
+
   return (
     <html lang="id">
       <head>
@@ -68,44 +105,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'LocalBusiness',
-              name: SITE.name,
-              description: SITE.description,
-              url: SITE.url,
-              telephone: SITE.phone,
-              address: {
-                '@type': 'PostalAddress',
-                streetAddress: 'Jl. Rawa Mulya No.15 RT 002/001',
-                addressLocality: 'Mustika Jaya',
-                addressRegion: 'Jawa Barat',
-                postalCode: '17158',
-                addressCountry: 'ID',
-              },
-              geo: {
-                '@type': 'GeoCoordinates',
-                latitude: -6.2797,
-                longitude: 107.0086,
-              },
-              openingHoursSpecification: [
-                {
-                  '@type': 'OpeningHoursSpecification',
-                  dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                  opens: '08:00',
-                  closes: '17:00',
-                },
-              ],
-              image: `${SITE.url}/images/hero-all-products.jpg`,
-              priceRange: '$$',
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: '4.9',
-                reviewCount: '127',
-              },
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       </head>
       <body>

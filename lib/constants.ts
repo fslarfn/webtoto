@@ -3,14 +3,14 @@ export const SITE = {
   tagline: 'Produsen Kusen Lengkung Terpercaya Se-Indonesia',
   description:
     'Menyediakan berbagai kebutuhan kusen dan pintu aluminium lengkung custom. Harga langsung pabrik, melayani seluruh Indonesia.',
-  url: 'https://totoalumuniummanufacture.com',
+  url: 'https://totoaluminiummanufacture.com',
   phone: '0813-1191-2002',
   phoneRaw: '6281311912002',
   whatsappMsg: 'Halo, saya ingin konsultasi tentang kusen aluminium lengkung',
   address: 'Jl. Rawa Mulya No.15 RT 002/001, Mustika Jaya, Kec. Mustika Jaya, Kota Bekasi, Jawa Barat 17158',
   tiktok: '@toto.alumunium.ma',
   tiktokUrl: 'https://www.tiktok.com/@toto.alumunium.ma',
-  email: 'info@totoalumuniummanufacture.com',
+  email: 'info@totoaluminiummanufacture.com',
 }
 
 export const WA_URL = `https://wa.me/${SITE.phoneRaw}?text=${encodeURIComponent(SITE.whatsappMsg)}`
