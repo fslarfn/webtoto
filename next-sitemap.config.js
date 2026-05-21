@@ -2,6 +2,7 @@
 module.exports = {
   siteUrl: 'https://totoaluminiummanufacture.com',
   generateRobotsTxt: true,
+  generateIndexSitemap: false,
   changefreq: 'weekly',
   priority: 0.7,
   sitemapSize: 7000,

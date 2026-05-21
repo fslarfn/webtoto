@@ -13,7 +13,13 @@
       "Bash(git commit *)",
       "Bash(git remote *)",
       "Bash(git branch *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npm list *)",
+      "Bash(npx next-sitemap *)",
+      "Bash(git -C \"C:\\\\Users\\\\ASUS\\\\Desktop\\\\websitebaru\" status)",
+      "Bash(git -C \"C:\\\\Users\\\\ASUS\\\\Desktop\\\\websitebaru\" diff)",
+      "Bash(git -C \"C:\\\\Users\\\\ASUS\\\\Desktop\\\\websitebaru\" add next-sitemap.config.js .claude/settings.local.json)",
+      "Bash(git -C 'C:\\\\Users\\\\ASUS\\\\Desktop\\\\websitebaru' commit -m ' *)"
     ]
   }
 }
