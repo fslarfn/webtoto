@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { MessageCircle, Info } from 'lucide-react'
 import { WA_URL, SITE } from '@/lib/constants'
+import { readDB } from '@/lib/db'
+import type { Price } from '@/types'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Daftar Harga Kusen Aluminium Lengkung',
@@ -9,28 +13,13 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE.url}/harga` },
 }
 
-const priceData = [
-  { produk: 'Kusen 4"', warnaumum: '240.000', ykk: '310.000', mf: '280.000' },
-  { produk: 'Kusen 3"', warnaumum: '190.000', ykk: '260.000', mf: '230.000' },
-  { produk: 'Openback 4"', warnaumum: '250.000', ykk: '320.000', mf: '290.000' },
-  { produk: 'Openback 3"', warnaumum: '200.000', ykk: '270.000', mf: '240.000' },
-  { produk: 'OB + Stoper 4"', warnaumum: '320.000', ykk: '400.000', mf: '360.000' },
-  { produk: 'OB + Stoper 3"', warnaumum: '260.000', ykk: '340.000', mf: '300.000' },
-  { produk: 'Tutup M4"', warnaumum: '190.000', ykk: '250.000', mf: '220.000' },
-  { produk: 'Tutup M3"', warnaumum: '160.000', ykk: '210.000', mf: '190.000' },
-  { produk: 'Daun 8 & 6cm', warnaumum: '360.000', ykk: '450.000', mf: '410.000' },
-  { produk: 'Daun 5cm', warnaumum: '310.000', ykk: '390.000', mf: '350.000' },
-  { produk: 'Stoper', warnaumum: '60.000', ykk: '90.000', mf: '75.000' },
-  { produk: 'Ornamen', warnaumum: '60.000', ykk: '90.000', mf: '75.000' },
-  { produk: 'Mahkota', warnaumum: '150.000', ykk: '200.000', mf: '180.000' },
-  { produk: 'Transome', warnaumum: '370.000', ykk: '470.000', mf: '430.000' },
-]
-
 function formatRp(v: string) {
   return `Rp ${v}/m`
 }
 
 export default function HargaPage() {
+  const priceData = readDB<Price>('prices.json')
+
   return (
     <div className="pt-20 lg:pt-24">
       {/* Header */}
@@ -78,16 +67,17 @@ export default function HargaPage() {
             </thead>
             <tbody>
               {priceData.map((row, i) => (
-                <tr
-                  key={row.produk}
-                  className={i % 2 === 0 ? 'bg-white' : 'bg-[#F9F6F2]'}
-                >
+                <tr key={row.id} className={i % 2 === 0 ? 'bg-white' : 'bg-[#F9F6F2]'}>
                   <td className="px-5 py-3.5 font-medium text-gray-900">{row.produk}</td>
                   <td className="px-5 py-3.5 text-center text-gray-700">
-                    {formatRp(row.warnaumum)}
+                    {row.warnaUmum ? formatRp(row.warnaUmum) : '—'}
                   </td>
-                  <td className="px-5 py-3.5 text-center text-gray-700">{formatRp(row.ykk)}</td>
-                  <td className="px-5 py-3.5 text-center text-gray-700">{formatRp(row.mf)}</td>
+                  <td className="px-5 py-3.5 text-center text-gray-700">
+                    {row.ykk ? formatRp(row.ykk) : '—'}
+                  </td>
+                  <td className="px-5 py-3.5 text-center text-gray-700">
+                    {row.mf ? formatRp(row.mf) : '—'}
+                  </td>
                 </tr>
               ))}
               {/* Serat Kayu row */}

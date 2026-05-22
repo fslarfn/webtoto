@@ -1,0 +1,16 @@
+[
+  { "id": "1", "produk": "Kusen 4\"", "warnaUmum": "240.000", "ykk": "310.000", "mf": "280.000" },
+  { "id": "2", "produk": "Kusen 3\"", "warnaUmum": "190.000", "ykk": "260.000", "mf": "230.000" },
+  { "id": "3", "produk": "Openback 4\"", "warnaUmum": "250.000", "ykk": "320.000", "mf": "290.000" },
+  { "id": "4", "produk": "Openback 3\"", "warnaUmum": "200.000", "ykk": "270.000", "mf": "240.000" },
+  { "id": "5", "produk": "OB + Stoper 4\"", "warnaUmum": "320.000", "ykk": "400.000", "mf": "360.000" },
+  { "id": "6", "produk": "OB + Stoper 3\"", "warnaUmum": "260.000", "ykk": "340.000", "mf": "300.000" },
+  { "id": "7", "produk": "Tutup M4\"", "warnaUmum": "190.000", "ykk": "250.000", "mf": "220.000" },
+  { "id": "8", "produk": "Tutup M3\"", "warnaUmum": "160.000", "ykk": "210.000", "mf": "190.000" },
+  { "id": "9", "produk": "Daun 8 & 6cm", "warnaUmum": "360.000", "ykk": "450.000", "mf": "410.000" },
+  { "id": "10", "produk": "Daun 5cm", "warnaUmum": "310.000", "ykk": "390.000", "mf": "350.000" },
+  { "id": "11", "produk": "Stoper", "warnaUmum": "60.000", "ykk": "90.000", "mf": "75.000" },
+  { "id": "12", "produk": "Ornamen", "warnaUmum": "60.000", "ykk": "90.000", "mf": "75.000" },
+  { "id": "13", "produk": "Mahkota", "warnaUmum": "150.000", "ykk": "200.000", "mf": "180.000" },
+  { "id": "14", "produk": "Transome", "warnaUmum": "370.000", "ykk": "470.000", "mf": "430.000" }
+]
