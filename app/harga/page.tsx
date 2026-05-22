@@ -3,6 +3,8 @@ import { MessageCircle, Info } from 'lucide-react'
 import { WA_URL, SITE } from '@/lib/constants'
 import { readDB } from '@/lib/db'
 import type { Price } from '@/types'
+import JsonLd from '@/components/JsonLd'
+import { breadcrumbSchema } from '@/lib/schema'
 
 export const revalidate = 60
 
@@ -19,9 +21,14 @@ function formatRp(v: string) {
 
 export default function HargaPage() {
   const priceData = readDB<Price>('prices.json')
+  const crumbs = breadcrumbSchema([
+    { name: 'Beranda', url: SITE.url },
+    { name: 'Harga', url: `${SITE.url}/harga` },
+  ])
 
   return (
     <div className="pt-20 lg:pt-24">
+      <JsonLd schema={crumbs} />
       {/* Header */}
       <div className="bg-[#7B3F00] py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

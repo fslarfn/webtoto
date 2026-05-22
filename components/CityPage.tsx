@@ -2,6 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MessageCircle, ChevronDown, MapPin } from 'lucide-react'
 import { WA_URL, SITE } from '@/lib/constants'
+import JsonLd from '@/components/JsonLd'
+import { breadcrumbSchema } from '@/lib/schema'
 
 interface FAQ {
   q: string
@@ -21,7 +23,7 @@ export default function CityPage({ city, province, slug, h1, description, faqs }
   const waMsg = `Halo, saya dari ${city}. Ingin konsultasi tentang kusen aluminium lengkung.`
   const waUrl = `https://wa.me/${SITE.phoneRaw}?text=${encodeURIComponent(waMsg)}`
 
-  const schema = {
+  const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: faqs.map((f) => ({
@@ -31,19 +33,14 @@ export default function CityPage({ city, province, slug, h1, description, faqs }
     })),
   }
 
-  const breadcrumb = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Beranda', item: SITE.url },
-      { '@type': 'ListItem', position: 2, name: `Kusen Aluminium Lengkung ${city}`, item: `${SITE.url}/${slug}` },
-    ],
-  }
+  const crumbs = breadcrumbSchema([
+    { name: 'Beranda', url: SITE.url },
+    { name: `Kusen Aluminium Lengkung ${city}`, url: `${SITE.url}/${slug}` },
+  ])
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+      <JsonLd schema={[faqJsonLd, crumbs]} />
 
       <div className="pt-20 lg:pt-24">
         {/* Hero */}

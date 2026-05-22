@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Circle, AppWindow, DoorOpen, Square, LayoutGrid, Wrench } from 'lucide-react'
 import { SITE } from '@/lib/constants'
+import JsonLd from '@/components/JsonLd'
+import { breadcrumbSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'Produk Kusen Aluminium Lengkung Custom',
@@ -69,21 +71,14 @@ const products = [
 ]
 
 export default function ProdukPage() {
-  const breadcrumb = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Beranda', item: SITE.url },
-      { '@type': 'ListItem', position: 2, name: 'Produk', item: `${SITE.url}/produk` },
-    ],
-  }
+  const crumbs = breadcrumbSchema([
+    { name: 'Beranda', url: SITE.url },
+    { name: 'Produk', url: `${SITE.url}/produk` },
+  ])
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
-      />
+      <JsonLd schema={crumbs} />
       <div className="pt-20 lg:pt-24">
         {/* Header */}
         <div className="bg-[#7B3F00] py-16">

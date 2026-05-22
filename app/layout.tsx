@@ -4,6 +4,8 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import FloatingWA from '@/components/FloatingWA'
 import { siteConfig } from '@/lib/config'
+import JsonLd from '@/components/JsonLd'
+import { localBusinessSchema, websiteSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -60,53 +62,13 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: siteConfig.name,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    telephone: siteConfig.phone,
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Jl. Rawa Mulya No.15 RT 002/001',
-      addressLocality: 'Mustika Jaya',
-      addressRegion: 'Jawa Barat',
-      postalCode: '17158',
-      addressCountry: 'ID',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: -6.2797,
-      longitude: 107.0086,
-    },
-    openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-        opens: '08:00',
-        closes: '17:00',
-      },
-    ],
-    image: `${siteConfig.url}/images/hero-all-products.jpg`,
-    priceRange: '$$',
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      reviewCount: '127',
-    },
-  }
-
   return (
     <html lang="id">
       <head>
         <link rel="icon" href="/images/logo.webp" type="image/webp" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
+        <JsonLd schema={[localBusinessSchema, websiteSchema]} />
       </head>
       <body>
         <Navbar />

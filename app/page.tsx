@@ -8,6 +8,8 @@ import TestimoniSection from '@/components/home/TestimoniSection'
 import FaqSection from '@/components/home/FaqSection'
 import CtaBottom from '@/components/home/CtaBottom'
 import { SITE } from '@/lib/constants'
+import JsonLd from '@/components/JsonLd'
+import { faqSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   title: 'Produsen Kusen Aluminium Lengkung Terpercaya Se-Indonesia | CV Toto Aluminium',
@@ -19,6 +21,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <JsonLd schema={faqSchema} />
       <HeroSection />
       <ProductSection />
       <WhyUsSection />
