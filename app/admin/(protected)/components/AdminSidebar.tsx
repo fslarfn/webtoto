@@ -1,7 +1,8 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, FileText, Image, DollarSign, MessageSquare, ChevronRight } from 'lucide-react'
+import { signOut } from 'next-auth/react'
+import { LayoutDashboard, FileText, Image, DollarSign, MessageSquare, ChevronRight, LogOut } from 'lucide-react'
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -49,7 +50,7 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-[#5a2e00]">
+      <div className="p-3 border-t border-[#5a2e00] space-y-1">
         <Link
           href="/"
           target="_blank"
@@ -57,6 +58,13 @@ export default function AdminSidebar() {
         >
           <span>← Lihat Website</span>
         </Link>
+        <button
+          onClick={() => signOut({ callbackUrl: '/admin/login' })}
+          className="w-full flex items-center gap-2 px-3 py-2 text-xs text-amber-200 hover:text-red-300 transition-colors"
+        >
+          <LogOut size={14} />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
   )
