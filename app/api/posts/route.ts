@@ -21,11 +21,11 @@ function rowToPost(row: any): Post {
 }
 
 export async function GET() {
-  const sb = getSupabase()
-  if (!sb) {
-    return NextResponse.json(readDB<Post>('posts.json'))
-  }
   try {
+    const sb = getSupabase()
+    if (!sb) {
+      return NextResponse.json(readDB<Post>('posts.json'))
+    }
     const { data, error } = await sb
       .from('posts')
       .select('*')
