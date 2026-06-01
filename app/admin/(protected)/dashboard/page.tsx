@@ -1,16 +1,40 @@
+import { getSupabase } from '@/lib/supabase'
 import { readDB } from '@/lib/db'
 import type { Post, Message, GalleryItem } from '@/types'
 import Link from 'next/link'
 import { FileText, Image, MessageSquare, Plus } from 'lucide-react'
 
-export default function DashboardPage() {
-  const posts = readDB<Post>('posts.json')
+function rowToPost(row: any): Post {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    category: row.category,
+    excerpt: row.excerpt || '',
+    content: row.content || '',
+    thumbnail: row.thumbnail || '',
+    metaDescription: row.meta_description || '',
+    status: row.status,
+    createdAt: (row.created_at || '').split('T')[0],
+    updatedAt: (row.updated_at || '').split('T')[0],
+  }
+}
+
+async function getPosts(): Promise<Post[]> {
+  const sb = getSupabase()
+  if (!sb) return readDB<Post>('posts.json')
+  const { data } = await sb.from('posts').select('*').order('created_at', { ascending: false })
+  return (data || []).map(rowToPost)
+}
+
+export default async function DashboardPage() {
+  const posts = await getPosts()
   const messages = readDB<Message>('messages.json')
   const gallery = readDB<GalleryItem>('gallery.json')
 
   const publishedCount = posts.filter((p) => p.status === 'published').length
   const newMessages = messages.filter((m) => m.status === 'baru').length
-  const recentPosts = [...posts].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 5)
+  const recentPosts = posts.slice(0, 5)
 
   const stats = [
     { label: 'Total Artikel', value: posts.length, sub: `${publishedCount} published`, icon: FileText, color: 'bg-blue-50 text-blue-700' },

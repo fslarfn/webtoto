@@ -1,19 +1,51 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { getSupabase } from '@/lib/supabase'
 import { readDB } from '@/lib/db'
 import type { Post } from '@/types'
 import { SITE } from '@/lib/constants'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Calendar } from 'lucide-react'
+import BlogContent from '../components/BlogContent'
 
 export const revalidate = 60
 
 type Props = { params: { slug: string } }
 
+function rowToPost(row: any): Post {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    category: row.category,
+    excerpt: row.excerpt || '',
+    content: row.content || '',
+    thumbnail: row.thumbnail || '',
+    metaDescription: row.meta_description || '',
+    status: row.status,
+    createdAt: (row.created_at || '').split('T')[0],
+    updatedAt: (row.updated_at || '').split('T')[0],
+  }
+}
+
+async function getPost(slug: string): Promise<Post | null> {
+  const sb = getSupabase()
+  if (!sb) {
+    return readDB<Post>('posts.json').find((p) => p.slug === slug && p.status === 'published') ?? null
+  }
+  const { data, error } = await sb
+    .from('posts')
+    .select('*')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single()
+  if (error || !data) return null
+  return rowToPost(data)
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const posts = readDB<Post>('posts.json')
-  const post = posts.find((p) => p.slug === params.slug && p.status === 'published')
+  const post = await getPost(params.slug)
   if (!post) return {}
   return {
     title: post.title,
@@ -22,9 +54,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function BlogDetailPage({ params }: Props) {
-  const posts = readDB<Post>('posts.json')
-  const post = posts.find((p) => p.slug === params.slug && p.status === 'published')
+export default async function BlogDetailPage({ params }: Props) {
+  const post = await getPost(params.slug)
   if (!post) notFound()
 
   return (
@@ -56,25 +87,19 @@ export default function BlogDetailPage({ params }: Props) {
         </div>
 
         <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-a:text-[#7B3F00]">
-          {post.content.split('\n').map((line, i) => {
-            if (line.startsWith('# ')) return <h1 key={i} className="text-2xl font-bold mt-6 mb-3">{line.slice(2)}</h1>
-            if (line.startsWith('## ')) return <h2 key={i} className="text-xl font-bold mt-5 mb-2">{line.slice(3)}</h2>
-            if (line.startsWith('### ')) return <h3 key={i} className="text-lg font-bold mt-4 mb-2">{line.slice(4)}</h3>
-            if (line.startsWith('- ') || line.startsWith('* ')) return <li key={i} className="ml-4 text-gray-700">{line.slice(2)}</li>
-            if (line.match(/^\d+\. /)) return <li key={i} className="ml-4 text-gray-700 list-decimal">{line.replace(/^\d+\. /, '')}</li>
-            if (line === '') return <br key={i} />
-            return (
-              <p
-                key={i}
-                className="text-gray-700 leading-relaxed mb-3"
-                dangerouslySetInnerHTML={{
-                  __html: line
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>'),
-                }}
-              />
-            )
-          })}
+          <BlogContent content={post.content} />
+        </div>
+
+        <div className="mt-12 p-6 bg-[#F5EFE6] rounded-2xl text-center">
+          <p className="font-semibold text-gray-900 mb-3">Tertarik dengan produk kami?</p>
+          <a
+            href={`https://wa.me/6281311912002?text=Halo, saya ingin konsultasi setelah membaca artikel: ${post.title}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#7B3F00] text-white font-semibold px-6 py-3 rounded-xl hover:bg-[#5a2e00] transition-colors"
+          >
+            Konsultasi via WhatsApp
+          </a>
         </div>
       </div>
     </div>

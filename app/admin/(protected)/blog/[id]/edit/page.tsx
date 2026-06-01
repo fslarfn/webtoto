@@ -90,6 +90,7 @@ export default function EditBlogPage() {
               <option>Tutorial</option>
               <option>Produk</option>
               <option>Inspirasi</option>
+              <option>Harga</option>
             </select>
           </div>
           <div>

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import { Calendar, ArrowRight } from 'lucide-react'
 import { SITE } from '@/lib/constants'
+import { getSupabase } from '@/lib/supabase'
 import { readDB } from '@/lib/db'
 import type { Post } from '@/types'
 
@@ -15,11 +16,38 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE.url}/blog` },
 }
 
-export default function BlogPage() {
-  const allPosts = readDB<Post>('posts.json')
-  const articles = allPosts
-    .filter((p) => p.status === 'published')
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+function rowToPost(row: any): Post {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    category: row.category,
+    excerpt: row.excerpt || '',
+    content: row.content || '',
+    thumbnail: row.thumbnail || '',
+    metaDescription: row.meta_description || '',
+    status: row.status,
+    createdAt: (row.created_at || '').split('T')[0],
+    updatedAt: (row.updated_at || '').split('T')[0],
+  }
+}
+
+async function getPublishedPosts(): Promise<Post[]> {
+  const sb = getSupabase()
+  if (!sb) {
+    return readDB<Post>('posts.json').filter((p) => p.status === 'published')
+  }
+  const { data, error } = await sb
+    .from('posts')
+    .select('*')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false })
+  if (error) return []
+  return (data || []).map(rowToPost)
+}
+
+export default async function BlogPage() {
+  const articles = await getPublishedPosts()
 
   return (
     <div className="pt-20 lg:pt-24">

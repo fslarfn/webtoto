@@ -2,7 +2,7 @@ export interface Post {
   id: string
   title: string
   slug: string
-  category: 'Tips' | 'Tutorial' | 'Produk' | 'Inspirasi'
+  category: 'Tips' | 'Tutorial' | 'Produk' | 'Inspirasi' | 'Harga'
   excerpt: string
   content: string
   thumbnail: string

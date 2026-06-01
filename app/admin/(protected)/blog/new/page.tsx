@@ -123,6 +123,7 @@ export default function NewBlogPage() {
               <option>Tutorial</option>
               <option>Produk</option>
               <option>Inspirasi</option>
+              <option>Harga</option>
             </select>
           </div>
 
