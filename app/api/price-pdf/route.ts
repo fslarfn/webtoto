@@ -3,18 +3,26 @@ import { getSupabase } from '@/lib/supabase'
 import { getToken } from 'next-auth/jwt'
 
 const BUCKET = 'price-pdfs'
-const SETTINGS_KEY = 'price_pdf_url'
+const FILENAME = 'daftar-harga.pdf'
+
+async function ensureBucket(sb: NonNullable<ReturnType<typeof getSupabase>>) {
+  const { data: buckets } = await sb.storage.listBuckets()
+  if (!buckets?.some((b) => b.name === BUCKET)) {
+    await sb.storage.createBucket(BUCKET, { public: true })
+  }
+}
 
 export async function GET() {
   try {
     const sb = getSupabase()
     if (!sb) return NextResponse.json({ url: null })
-    const { data } = await sb
-      .from('settings')
-      .select('value')
-      .eq('key', SETTINGS_KEY)
-      .single()
-    return NextResponse.json({ url: data?.value ?? null })
+
+    const { data: files } = await sb.storage.from(BUCKET).list()
+    const exists = files?.some((f) => f.name === FILENAME)
+    if (!exists) return NextResponse.json({ url: null })
+
+    const { data } = sb.storage.from(BUCKET).getPublicUrl(FILENAME)
+    return NextResponse.json({ url: data.publicUrl })
   } catch {
     return NextResponse.json({ url: null })
   }
@@ -35,58 +43,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Hanya file PDF yang diizinkan' }, { status: 400 })
     }
 
+    await ensureBucket(sb)
+
     const buffer = Buffer.from(await file.arrayBuffer())
-    const filename = `daftar-harga-${Date.now()}.pdf`
-
-    // Pastikan bucket ada — buat jika belum
-    const { data: buckets } = await sb.storage.listBuckets()
-    const bucketExists = buckets?.some((b) => b.name === BUCKET)
-    if (!bucketExists) {
-      const { error: bucketErr } = await sb.storage.createBucket(BUCKET, { public: true })
-      if (bucketErr) {
-        console.error('Bucket create error:', bucketErr)
-        return NextResponse.json(
-          { error: `Bucket error: ${bucketErr.message}` },
-          { status: 500 }
-        )
-      }
-    }
-
-    // Upload file
     const { error: uploadError } = await sb.storage
       .from(BUCKET)
-      .upload(filename, buffer, { contentType: 'application/pdf', upsert: true })
+      .upload(FILENAME, buffer, { contentType: 'application/pdf', upsert: true })
+
     if (uploadError) {
-      console.error('Upload error:', uploadError)
-      return NextResponse.json(
-        { error: `Upload gagal: ${uploadError.message}` },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: `Upload gagal: ${uploadError.message}` }, { status: 500 })
     }
 
-    // Ambil public URL
-    const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(filename)
-    const url = urlData.publicUrl
-
-    // Simpan URL ke settings
-    const { error: settingsError } = await sb
-      .from('settings')
-      .upsert({ key: SETTINGS_KEY, value: url })
-    if (settingsError) {
-      console.error('Settings error:', settingsError)
-      return NextResponse.json(
-        { error: `Simpan URL gagal: ${settingsError.message}` },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ url })
+    const { data } = sb.storage.from(BUCKET).getPublicUrl(FILENAME)
+    return NextResponse.json({ url: data.publicUrl })
   } catch (error: any) {
     console.error('PDF upload error:', error)
-    return NextResponse.json(
-      { error: error.message || 'Upload gagal' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: error.message || 'Upload gagal' }, { status: 500 })
   }
 }
 
@@ -98,7 +70,7 @@ export async function DELETE(req: NextRequest) {
   if (!sb) return NextResponse.json({ error: 'Supabase belum dikonfigurasi' }, { status: 500 })
 
   try {
-    await sb.from('settings').delete().eq('key', SETTINGS_KEY)
+    await sb.storage.from(BUCKET).remove([FILENAME])
     return NextResponse.json({ ok: true })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })

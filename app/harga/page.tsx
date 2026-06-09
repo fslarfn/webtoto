@@ -18,12 +18,11 @@ async function getPdfUrl(): Promise<string | null> {
   try {
     const sb = getSupabase()
     if (!sb) return null
-    const { data } = await sb
-      .from('settings')
-      .select('value')
-      .eq('key', 'price_pdf_url')
-      .single()
-    return data?.value ?? null
+    const { data: files } = await sb.storage.from('price-pdfs').list()
+    const exists = files?.some((f) => f.name === 'daftar-harga.pdf')
+    if (!exists) return null
+    const { data } = sb.storage.from('price-pdfs').getPublicUrl('daftar-harga.pdf')
+    return data.publicUrl
   } catch {
     return null
   }
