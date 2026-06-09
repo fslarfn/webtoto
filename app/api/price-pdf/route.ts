@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getSupabase } from '@/lib/supabase'
 import { getToken } from 'next-auth/jwt'
 
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data } = sb.storage.from(BUCKET).getPublicUrl(FILENAME)
+    revalidatePath('/harga')
     return NextResponse.json({ url: data.publicUrl })
   } catch (error: any) {
     console.error('PDF upload error:', error)
@@ -71,6 +73,7 @@ export async function DELETE(req: NextRequest) {
 
   try {
     await sb.storage.from(BUCKET).remove([FILENAME])
+    revalidatePath('/harga')
     return NextResponse.json({ ok: true })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
