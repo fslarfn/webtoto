@@ -35,7 +35,7 @@ export default function HargaAdminPage() {
       setSuccess('PDF berhasil diupload dan sekarang tampil di halaman /harga')
       e.target.value = ''
     } else {
-      setError(data.error || 'Upload gagal')
+      setError(`Upload gagal: ${data.error || 'Unknown error'} (status ${res.status})`)
     }
   }
 

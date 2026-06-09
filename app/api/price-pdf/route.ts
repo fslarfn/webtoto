@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const sb = getSupabase()
-  if (!sb) return NextResponse.json({ error: 'Storage belum dikonfigurasi' }, { status: 500 })
+  if (!sb) return NextResponse.json({ error: 'Supabase belum dikonfigurasi' }, { status: 500 })
 
   try {
     const formData = await req.formData()
@@ -38,20 +38,55 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer())
     const filename = `daftar-harga-${Date.now()}.pdf`
 
+    // Pastikan bucket ada — buat jika belum
+    const { data: buckets } = await sb.storage.listBuckets()
+    const bucketExists = buckets?.some((b) => b.name === BUCKET)
+    if (!bucketExists) {
+      const { error: bucketErr } = await sb.storage.createBucket(BUCKET, { public: true })
+      if (bucketErr) {
+        console.error('Bucket create error:', bucketErr)
+        return NextResponse.json(
+          { error: `Bucket error: ${bucketErr.message}` },
+          { status: 500 }
+        )
+      }
+    }
+
+    // Upload file
     const { error: uploadError } = await sb.storage
       .from(BUCKET)
       .upload(filename, buffer, { contentType: 'application/pdf', upsert: true })
-    if (uploadError) throw uploadError
+    if (uploadError) {
+      console.error('Upload error:', uploadError)
+      return NextResponse.json(
+        { error: `Upload gagal: ${uploadError.message}` },
+        { status: 500 }
+      )
+    }
 
+    // Ambil public URL
     const { data: urlData } = sb.storage.from(BUCKET).getPublicUrl(filename)
     const url = urlData.publicUrl
 
-    await sb.from('settings').upsert({ key: SETTINGS_KEY, value: url })
+    // Simpan URL ke settings
+    const { error: settingsError } = await sb
+      .from('settings')
+      .upsert({ key: SETTINGS_KEY, value: url })
+    if (settingsError) {
+      console.error('Settings error:', settingsError)
+      return NextResponse.json(
+        { error: `Simpan URL gagal: ${settingsError.message}` },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({ url })
   } catch (error: any) {
     console.error('PDF upload error:', error)
-    return NextResponse.json({ error: error.message || 'Upload gagal' }, { status: 500 })
+    return NextResponse.json(
+      { error: error.message || 'Upload gagal' },
+      { status: 500 }
+    )
   }
 }
 
@@ -60,7 +95,7 @@ export async function DELETE(req: NextRequest) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const sb = getSupabase()
-  if (!sb) return NextResponse.json({ error: 'Storage belum dikonfigurasi' }, { status: 500 })
+  if (!sb) return NextResponse.json({ error: 'Supabase belum dikonfigurasi' }, { status: 500 })
 
   try {
     await sb.from('settings').delete().eq('key', SETTINGS_KEY)
