@@ -19,6 +19,7 @@ export const NAV_LINKS = [
   { label: 'Beranda', href: '/' },
   { label: 'Produk', href: '/produk' },
   { label: 'Harga', href: '/harga' },
+  { label: 'Kalkulator', href: '/kalkulator' },
   { label: 'Galeri', href: '/galeri' },
   { label: 'Blog', href: '/blog' },
   { label: 'Tentang Kami', href: '/tentang-kami' },
