@@ -178,6 +178,9 @@ export default function BendingCalculator({ products }: { products: CalcProduct[
                 >
                   {METHODS[m].label}
                 </div>
+                <div className="text-[10px] text-[#A89680] mt-1 leading-tight">
+                  {METHODS[m].desc}
+                </div>
               </button>
             ))}
           </div>

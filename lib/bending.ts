@@ -10,10 +10,28 @@ export const OVERSIZE_CM = 600
 
 export type MethodId = 1 | 2 | 3
 
-export const METHODS: Record<MethodId, { id: MethodId; label: string; short: string }> = {
-  1: { id: 1, label: 'Kurang dari ½ lingkaran', short: 'Kurang ½' },
-  2: { id: 2, label: 'Setengah lingkaran pas', short: 'Pas ½' },
-  3: { id: 3, label: 'Lebih dari ½ lingkaran', short: 'Lebih ½' },
+/** Aturan pabrik: setengah lingkaran lebar 60–75 cm memakai material standar 1,5 m. */
+export const HALF_STD = { minLebar: 60, maxLebar: 75, cm: 150 }
+
+export const METHODS: Record<MethodId, { id: MethodId; label: string; short: string; desc: string }> = {
+  1: {
+    id: 1,
+    label: 'Kurang dari ½ lingkaran',
+    short: 'Kurang ½',
+    desc: 'Tinggi lengkung kurang dari Lebar ÷ 2',
+  },
+  2: {
+    id: 2,
+    label: 'Setengah lingkaran pas',
+    short: 'Pas ½',
+    desc: 'Tinggi lengkung sama dengan Lebar ÷ 2',
+  },
+  3: {
+    id: 3,
+    label: 'Lebih dari ½ lingkaran',
+    short: 'Lebih ½',
+    desc: 'Tinggi lengkung lebih dari Lebar ÷ 2',
+  },
 }
 
 export const FORMULA_HINTS: Record<MethodId, string> = {
@@ -78,6 +96,19 @@ export function calculate(method: MethodId, lebar: string | number, tinggi: stri
 
   // METODE 2: Setengah lingkaran pas
   if (method === 2) {
+    // Aturan pabrik: lebar 60–75 cm memakai material standar 1,5 m
+    if (L >= HALF_STD.minLebar && L <= HALF_STD.maxLebar) {
+      return {
+        ok: true,
+        cm: HALF_STD.cm,
+        steps: [
+          { label: `Lebar ${fmtCm(L)} cm (rentang 60–75)`, val: 'material standar' },
+          { label: 'Panjang material', val: `${HALF_STD.cm} cm` },
+        ],
+        msg: 'Setengah lingkaran dengan lebar 60–75 cm memakai material standar 1,5 m.',
+        msgType: 'info',
+      }
+    }
     const arc = half * PI
     const cm = arc + SAMBUNGAN_CM
     const steps: CalcStep[] = [

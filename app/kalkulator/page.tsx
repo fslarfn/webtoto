@@ -65,24 +65,28 @@ export default function KalkulatorPage() {
               <div className="text-xs font-mono text-[#A89680] mb-2">METODE 1</div>
               <h3 className="font-bold text-[#1A1A1A] mb-2">Kurang dari ½ lingkaran</h3>
               <p className="text-sm text-[#6B5B4E] leading-relaxed">
-                Lengkungan dangkal di bagian atas kusen — tinggi lengkungan kurang dari setengah
-                lebar. Material dihitung: lebar + tinggi + 30 cm sambungan.
+                <strong>Tinggi lengkung kurang dari hasil lebar dibagi 2.</strong> Contoh: lebar
+                100 cm, tinggi lengkungnya di bawah 50 cm — lengkungan dangkal di bagian atas
+                kusen. Material dihitung: lebar + tinggi + 30 cm sambungan.
               </p>
             </div>
             <div className="card p-6">
               <div className="text-xs font-mono text-[#A89680] mb-2">METODE 2</div>
               <h3 className="font-bold text-[#1A1A1A] mb-2">Setengah lingkaran pas</h3>
               <p className="text-sm text-[#6B5B4E] leading-relaxed">
-                Lengkungan setengah lingkaran sempurna — tinggi tepat setengah lebar. Material
-                dihitung dari keliling busur: (lebar ÷ 2) × 3,14 + 30 cm sambungan.
+                <strong>Tinggi lengkung sama dengan hasil lebar dibagi 2.</strong> Contoh: lebar
+                100 cm, tinggi lengkungnya tepat 50 cm — setengah lingkaran sempurna. Material
+                dihitung dari keliling busur: (lebar ÷ 2) × 3,14 + 30 cm sambungan. Khusus lebar
+                60–75 cm, material yang dipakai standar 1,5 m.
               </p>
             </div>
             <div className="card p-6">
               <div className="text-xs font-mono text-[#A89680] mb-2">METODE 3</div>
               <h3 className="font-bold text-[#1A1A1A] mb-2">Lebih dari ½ lingkaran</h3>
               <p className="text-sm text-[#6B5B4E] leading-relaxed">
-                Bentuk pintu/jendela arch dengan sisi tegak — tinggi melebihi setengah lebar.
-                Busur ditambah dua sisi lurus, plus 30 cm sambungan. Di atas 6 m otomatis
+                <strong>Tinggi lengkung lebih dari hasil lebar dibagi 2.</strong> Contoh: lebar
+                100 cm, tinggi lengkungnya di atas 50 cm — bentuk pintu/jendela arch dengan sisi
+                tegak. Busur ditambah dua sisi lurus, plus 30 cm sambungan. Di atas 6 m otomatis
                 ditambah 30 cm lagi.
               </p>
             </div>
